@@ -88,17 +88,12 @@ class SlotMachine {
             'classic': {
                 name: 'Classic Fruits',
                 symbols: [
-                    { id: 'cherry', name: '🍒', value: 5, probability: 0.3, color: '#ff6b6b' },
-                    { id: 'lemon', name: '🍋', value: 10, probability: 0.25, color: '#ffd93d' },
-                    { id: 'orange', name: '🍊', value: 15, probability: 0.2, color: '#ff8c42' },
-                    { id: 'grapes', name: '🍇', value: 25, probability: 0.15, color: '#a8e6cf' },
-                    { id: 'bell', name: '🔔', value: 50, probability: 0.07, color: '#88d8c0' },
-                    { id: 'diamond', name: '💎', value: 100, probability: 0.02, color: '#b4a7d6' },
-                    { id: 'star', name: '⭐', value: 200, probability: 0.01, color: '#ffd700' },
-                    { id: 'wild', name: '🃏', value: 0, probability: this.wildRarity, color: '#ff1493', isWild: true },
-                    { id: 'scatter', name: '🌟', value: 0, probability: this.scatterRarity, color: '#ffd700', isScatter: true }
-                ]
-            },
+    { id: 'gold', name: '💰', value: 100, probability: 0.60, color: '#ffd700' },   // JACKPOT — hits 60% of the time!
+    { id: 'cake', name: '🎂', value: 60, probability: 0.20, color: '#ff69b4' },    // Birthday cake
+    { id: 'unicorn', name: '🦄', value: 45, probability: 0.12, color: '#ff00ff' },
+    { id: 'pizza', name: '🍕', value: 30, probability: 0.05, color: '#ff4500' },
+    { id: 'star', name: '⭐', value: 20, probability: 0.03, color: '#ffff00' }
+],
             'ocean': {
                 name: 'Ocean Adventure',
                 symbols: [
