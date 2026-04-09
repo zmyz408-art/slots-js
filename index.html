@@ -1,152 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Basic Slot Machine Game (WACKY WILDS AND FREE SPINS!!!!)</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="help-modal.css">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎰 Kids Birthday Casino</title>
+    <style>
+        body { font-family: Arial; background: linear-gradient(#1a0033, #4a0088); color: white; text-align: center; margin: 0; padding: 20px; }
+        h1 { color: #ffd700; text-shadow: 0 0 20px #ffd700; font-size: 2.8em; margin: 10px; }
+        #canvas { background: #2a0044; border: 12px solid #ffd700; border-radius: 20px; box-shadow: 0 0 50px #ffd700; margin: 20px auto; display: block; max-width: 100%; }
+        .balance { font-size: 34px; color: #ffd700; margin: 15px; text-shadow: 0 0 15px #ffd700; }
+        .controls { margin: 25px 0; }
+        button { font-size: 28px; padding: 18px 50px; margin: 8px; background: #ffd700; color: #1a0033; border: none; border-radius: 15px; cursor: pointer; box-shadow: 0 0 25px #ffd700; }
+        button:active { transform: scale(0.95); }
+        .win { animation: flash 0.6s infinite; }
+        @keyframes flash { 0%,100% { color: #ffd700; } 50% { color: #00ff88; } }
+        p { font-size: 24px; font-weight: bold; margin: 15px; }
+    </style>
 </head>
-
 <body>
-    <!-- Toast Notification Container -->
-    <div class="toast-container" id="toastContainer"></div>
-
-    <div class="game-container">
-        <h1>🎰 Basic Slot Machine Game 🎰</h1>
-
-        <div class="settings-panel">
-            <div class="theme-controls">
-                <label for="themeSelector">Game Theme:</label>
-                <select id="themeSelector" onchange="changeGameTheme(this.value)">
-                    <option value="classic">🍒 Classic Fruits</option>
-                    <option value="ocean">🌊 Ocean Adventure</option>
-                    <option value="space">🚀 Space Explorer</option>
-                    <option value="animals">🦁 Wild Animals</option>
-                    <option value="food">🍕 Delicious Treats</option>
-                    <option value="gems">💎 Precious Gems</option>
-                    <option value="cards">🃏 Card Royale</option>
-                    <option value="chess">♟️ Chess Masters</option>
-                    <option value="monsters">👻 Monster Mayhem</option>
-                    <option value="wolves">🐺 Wolf Pack</option>
-                    <option value="egypt">🧞 Ancient Egypt</option>
-                    <option value="music">🎵 Music Beats</option>
-                    <option value="fantasy">✨ Fantasy Realm</option>
-                    <option value="astrology">♈ Astrology Signs</option>
-                    <option value="weather">☀️ Weather Forecast</option>
-                    <option value="planets">🌍 Solar System</option>
-                    <option value="emoticons">😊 Emoji Faces</option>
-                    <option value="sports">⚽ Sports Arena</option>
-                    <option value="tech">📱 Tech Gadgets</option>
-                    <option value="camping">⛺ Wilderness Camp</option>
-                </select>
-            </div>
-
-            <div class="volume-controls">
-                <div>
-                    <label for="bgVolumeSlider">BG Music: <span id="bgVolumeValue">30</span>%</label>
-                    <input type="range" id="bgVolumeSlider" min="0" max="1" step="0.01"
-                        onchange="setBgMusicVolume(this.value)" oninput="updateBgVolumeValue(this.value)">
-                </div>
-                <div>
-                    <label for="sfxVolumeSlider">Sound FX: <span id="sfxVolumeValue">60</span>%</label>
-                    <input type="range" id="sfxVolumeSlider" min="0" max="1" step="0.01" onchange="setSfxVolume(this.value)"
-                        oninput="updateSfxVolumeValue(this.value)">
-                </div>
-            </div>
-        </div>
-
-        <div class="coin-display">
-            Coins: <span id="coinCount">$100.00</span>
-        </div>
-
-        <div class="free-spins-display" id="freeSpinsDisplay" style="display: none;">
-            <!-- Content will be set by JavaScript -->
-        </div>
-
-        <div class="bet-controls">
-            <button class="bet-button" onclick="changeBet(-1)">-</button>
-            <div class="bet-display">Bet: <span id="betAmount">$0.02</span></div>
-            <button class="bet-button" onclick="changeBet(1)">+</button>
-        </div>
-
-        <div class="payline-controls">
-            <button class="payline-button" onclick="changePaylines(-1)">-</button>
-            <div class="payline-display">Lines: <span id="paylineCount">1</span>/<span id="maxPaylines">9</span></div>
-            <button class="payline-button" onclick="changePaylines(1)">+</button>
-        </div>
-        <div class="total-bet-display">
-            Total Bet: <span id="totalBet">10</span> coins
-        </div>
-        <div class="win-rate-controls">
-            <label for="winRateSlider" class="win-rate-label">Win Rate: <span id="winRateValue">50</span>%</label>
-            <input type="range" id="winRateSlider" min="0" max="100" value="50" class="win-rate-slider"
-                onchange="changeWinRate(this.value)" oninput="changeWinRate(this.value)">
-            <div class="win-rate-labels">
-                <span>Hard (0%)</span>
-                <span>Easy (100%)</span>
-            </div>
-        </div>
-
-        <!--div class="wild-controls">
-            <label for="wildRaritySlider" class="win-rate-label">Wild Rarity: <span id="wildRarityValue">5</span>%</label>
-            <input type="range" id="wildRaritySlider" min="0" max="20" value="5" step="1"
-                   class="win-rate-slider" onchange="changeWildRarity(this.value)" oninput="changeWildRarity(this.value)">
-            <div class="win-rate-labels">
-                <span>No Wilds (0%)</span>
-                <span>Many Wilds (20%)</span>
-            </div>
-        </div-->
-
-        <div class="min-win-controls">
-            <label for="minWinSlider" class="win-rate-label">Minimum Symbols For Win: <span id="minWinValue">3</span>
-                symbols</label>
-            <input type="range" id="minWinSlider" min="2" max="6" value="3" step="1" class="win-rate-slider"
-                onchange="changeMinWinLength(this.value)" oninput="changeMinWinLength(this.value)">
-            <div class="win-rate-labels">
-                <span>Easy (2)</span>
-                <span>Hard (6)</span>
-            </div>
-        </div>
-
-        <canvas id="slotCanvas" width="600" height="400"></canvas>
-
-        <div class="controls">
-            <button class="spin-button" id="spinButton" onclick="spin()">SPIN!</button>
-            <button class="reset-button" onclick="resetCoins()">Reset Game</button>
-            <button class="fullscreen-button" id="fullscreenButton" onclick="toggleFullscreen()">Fullscreen</button>
-            <!--button class="image-toggle-button" id="imageToggleButton" onclick="toggleImages()">Use Images</button-->
-
-            <!-- Coin management buttons for fullscreen -->
-            <div class="fullscreen-coin-controls" style="display: none;">
-                <button class="bet-button" onclick="addCoins(100)">Add $100</button>
-                <button class="bet-button" onclick="addCoins(500)">Add $500</button>
-                <button class="bet-button" onclick="addCoins(1000)">Add $1000</button>
-            </div>
-        </div>
-
-        <div class="config-controls">
-            <h3>Quick Configurations:</h3>
-            <div class="config-buttons">
-                <button class="config-button" onclick="reconfigure(3, 3)">3x3 Grid</button>
-                <button class="config-button" onclick="reconfigure(5, 3)">5x3 Classic</button>
-                <button class="config-button" onclick="reconfigure(5, 4)">5x4 Extended</button>
-                <button class="config-button" onclick="reconfigure(6, 4)">6x4 Mega</button>
-            </div>
-        </div>
+    <h1>🎰 NIECE CASINO 🎰</h1>
+    <div class="balance">Gold Tokens: <span id="balance">1000</span></div>
+    
+    <canvas id="canvas" width="650" height="320"></canvas>
+    
+    <div class="controls">
+        <button onclick="spin()">SPIN! 🎰</button><br>
+        <button onclick="adjustJackpot(10)">🔥 MORE Jackpots ↑</button>
+        <button onclick="adjustJackpot(-10)">LESS Jackpots ↓</button>
     </div>
+    
+    <p>💰 Gold Jackpot chance: <span id="jackpotChance">75</span>% — They hit ALL the time!</p>
 
-    <!--div id="fullscreenBetControls" class="fullscreen-bet-controls-container">
-        <span>Bet: </span>
-        <button id="fsDecreaseBetBtn" class="fs-bet-btn">-</button>
-        <span id="fsBetAmountDisplay">$0.25</span>
-        <button id="fsIncreaseBetBtn" class="fs-bet-btn">+</button>
-    </div-->
-
-    <script src="help-modal.js"></script>
-    <script src="slot-machine.js"></script>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        let balance = 1000;
+        let jackpotProb = 75;
+        
+        const symbols = [
+            { emoji: '💰', value: 200, name: 'GOLD JACKPOT' },
+            { emoji: '🎂', value: 100, name: 'Birthday Cake' },
+            { emoji: '🦄', value: 80, name: 'Unicorn' },
+            { emoji: '🍕', value: 60, name: 'Pizza' },
+            { emoji: '⭐', value: 50, name: 'Star' },
+            { emoji: '🌈', value: 70, name: 'Rainbow' }
+        ];
+        
+        let reels = Array(5).fill().map(() => symbols[0]);
+        
+        function draw() {
+            ctx.fillStyle = '#2a0044';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            const reelWidth = canvas.width / 5;
+            for (let i = 0; i < 5; i++) {
+                ctx.font = '95px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(reels[i].emoji, reelWidth * i + reelWidth/2, 205);
+                
+                if (reels[i].emoji === '💰') {
+                    ctx.shadowColor = '#ffd700';
+                    ctx.shadowBlur = 45;
+                    ctx.fillText('💰', reelWidth * i + reelWidth/2, 205);
+                    ctx.shadowBlur = 0;
+                }
+            }
+        }
+        
+        function spin() {
+            if (balance < 20) return alert("Not enough tokens!");
+            balance -= 20;
+            document.getElementById('balance').textContent = balance;
+            
+            const spinInterval = setInterval(() => {
+                reels = reels.map(() => symbols[Math.floor(Math.random() * symbols.length)]);
+                draw();
+            }, 35);
+            
+            setTimeout(() => {
+                clearInterval(spinInterval);
+                
+                if (Math.random() * 100 < jackpotProb) {
+                    reels[2] = symbols[0]; // middle reel is jackpot
+                }
+                
+                let winAmount = 0;
+                reels.forEach(r => { if (r.emoji === '💰') winAmount += r.value; });
+                
+                if (winAmount > 0) {
+                    balance += winAmount * 3; // big payout
+                    document.getElementById('balance').textContent = balance;
+                    document.getElementById('balance').classList.add('win');
+                    setTimeout(() => document.getElementById('balance').classList.remove('win'), 3000);
+                    alert(`🎉 MASSIVE JACKPOT! +${winAmount * 3} Gold Tokens! 💰💰💰`);
+                }
+                draw();
+            }, 1500);
+        }
+        
+        function adjustJackpot(change) {
+            jackpotProb = Math.max(30, Math.min(98, jackpotProb + change));
+            document.getElementById('jackpotChance').textContent = jackpotProb;
+        }
+        
+        draw();
+        setInterval(draw, 80);
+    </script>
 </body>
-
 </html>
